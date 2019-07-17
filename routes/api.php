@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\Category;
-
-Route::get('/', function () {
-    $categories = Category::parents()->ordered()->get();
-
-    dd($categories);
+/**
+ * Categories
+ */
+Route::namespace('Categories')->group(function () {
+    Route::apiResource('/categories', 'CategoryController');
 });
