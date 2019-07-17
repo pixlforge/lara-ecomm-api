@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Category;
+
 Route::get('/', function () {
-    return 'ok';
+    $categories = Category::parents()->ordered()->get();
+
+    dd($categories);
 });
