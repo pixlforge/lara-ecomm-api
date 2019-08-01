@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Scoping\Scoper;
+use App\Scoping\Scopes\CategoryScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -19,15 +20,27 @@ class Product extends Model
     }
 
     /**
+     * The scopes by which a product can be scoped.
+     *
+     * @return array
+     */
+    protected function scopes()
+    {
+        return [
+            'category' => new CategoryScope(),
+        ];
+    }
+
+    /**
      * Model can be scoped by a list of scopes.
      *
      * @param Builder $builder
      * @param array $scopes
      * @return void
      */
-    public function scopeWithScopes(Builder $builder, $scopes = [])
+    public function scopeWithScopes(Builder $builder)
     {
-        return (new Scoper(request()))->apply($builder, $scopes);
+        return (new Scoper(request()))->apply($builder, self::scopes());
     }
 
     /**
