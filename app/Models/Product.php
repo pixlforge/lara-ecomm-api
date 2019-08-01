@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use App\Scoping\Scoper;
+use App\Scoping\Contracts\HasScopes;
+use App\Models\Traits\HasScopesTrait;
 use App\Scoping\Scopes\CategoryScope;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 
-class Product extends Model
+class Product extends Model implements HasScopes
 {
+    use HasScopesTrait;
+
     /**
      * Get the route key for the model.
      *
@@ -24,23 +26,11 @@ class Product extends Model
      *
      * @return array
      */
-    protected function scopes()
+    public function scopes()
     {
         return [
             'category' => new CategoryScope(),
         ];
-    }
-
-    /**
-     * Model can be scoped by a list of scopes.
-     *
-     * @param Builder $builder
-     * @param array $scopes
-     * @return void
-     */
-    public function scopeWithScopes(Builder $builder)
-    {
-        return (new Scoper(request()))->apply($builder, self::scopes());
     }
 
     /**
