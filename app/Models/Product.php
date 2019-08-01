@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasPrice;
 use App\Scoping\Contracts\HasScopes;
 use App\Models\Traits\HasScopesTrait;
 use App\Scoping\Scopes\CategoryScope;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model implements HasScopes
 {
-    use HasScopesTrait;
+    use HasScopesTrait, HasPrice;
 
     /**
      * Get the route key for the model.
