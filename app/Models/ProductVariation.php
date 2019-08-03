@@ -54,4 +54,14 @@ class ProductVariation extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    /**
+     * Stocks relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
+    }
 }
