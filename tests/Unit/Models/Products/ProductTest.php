@@ -7,9 +7,12 @@ use App\Money\Money;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductVariation;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /** @test */
     public function it_uses_the_slug_for_the_route_key_name()
     {

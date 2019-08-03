@@ -4,9 +4,12 @@ namespace Tests\Feature\Products;
 
 use Tests\TestCase;
 use App\Models\Product;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductIndexTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /** @test */
     public function it_shows_a_collection_of_products()
     {
