@@ -12,6 +12,8 @@ class CreateProductVariationStockView extends Migration
      */
     public function up()
     {
+        DB::statement('DROP VIEW IF EXISTS product_variation_stock_view');
+        
         DB::statement("
             CREATE VIEW product_variation_stock_view AS
                 SELECT
@@ -19,8 +21,8 @@ class CreateProductVariationStockView extends Migration
                     product_variations.id AS product_variation_id,
                     COALESCE(SUM(stocks.quantity), 0) - COALESCE(SUM(product_variation_order.quantity), 0) AS stock,
                     CASE WHEN COALESCE(SUM(stocks.quantity), 0) - COALESCE(SUM(product_variation_order.quantity), 0) > 0
-                        THEN TRUE
-                        ELSE FALSE
+                        THEN 1
+                        ELSE 0
                     END in_stock
                 FROM product_variations
                 LEFT JOIN (

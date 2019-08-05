@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Money\Money;
 use App\Models\Traits\HasPrice;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Pivots\ProductVariationStockPivot;
 
 class ProductVariation extends Model
 {
@@ -35,6 +36,16 @@ class ProductVariation extends Model
         return $this->price->getAmount() !== $this->product->price->getAmount();
     }
 
+    public function inStock()
+    {
+        return $this->stockCount() > 0;
+    }
+
+    public function stockCount()
+    {
+        return $this->stock->sum('pivot.stock');
+    }
+
     /**
      * Type relationship.
      *
@@ -63,5 +74,15 @@ class ProductVariation extends Model
     public function stocks()
     {
         return $this->hasMany(Stock::class);
+    }
+
+    public function stock()
+    {
+        return $this->belongsToMany(
+            ProductVariation::class,
+            'product_variation_stock_view'
+        )->withPivot([
+            'stock', 'in_stock'
+        ])->using(ProductVariationStockPivot::class);
     }
 }
