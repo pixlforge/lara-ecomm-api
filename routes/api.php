@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * Auth
+ */
+Route::prefix('/auth')->namespace('Auth')->group(function () {
+    Route::post('/register', 'RegisterController')->name('auth.register');
+});
+
+/**
  * Categories
  */
 Route::namespace('Categories')->group(function () {
