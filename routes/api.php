@@ -6,6 +6,7 @@
 Route::prefix('/auth')->namespace('Auth')->group(function () {
     Route::post('/register', 'RegisterController')->name('auth.register');
     Route::post('/login', 'LoginController')->name('auth.login');
+    Route::get('/me', 'MeController')->name('auth.me');
 });
 
 /**
