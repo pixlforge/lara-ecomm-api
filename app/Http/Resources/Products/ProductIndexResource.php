@@ -23,6 +23,8 @@ class ProductIndexResource extends JsonResource
                 'detailed' => $this->detailedPrice,
                 'formatted' => $this->formattedPrice,
             ],
+            'in_stock' => $this->inStock(),
+            'stock_count' => $this->stockCount()
         ];
     }
 }

@@ -23,6 +23,28 @@ class Product extends Model implements HasScopes
     }
 
     /**
+     * Checks whether or not the product has any stock at all.
+     *
+     * @return boolean
+     */
+    public function inStock()
+    {
+        return $this->stockCount() > 0;
+    }
+
+    /**
+     * Get the stock count from all related product variations.
+     *
+     * @return integer
+     */
+    public function stockCount()
+    {
+        return $this->variations->sum(function ($variation) {
+            return $variation->stockCount();
+        });
+    }
+
+    /**
      * The scopes by which a product can be scoped.
      *
      * @return array
