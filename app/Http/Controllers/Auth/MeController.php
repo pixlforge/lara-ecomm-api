@@ -24,6 +24,10 @@ class MeController extends Controller
      */
     public function __invoke(Request $request)
     {
+        if (!$request->user()) {
+            return;
+        }
+        
         return new PrivateUserResource($request->user());
     }
 }

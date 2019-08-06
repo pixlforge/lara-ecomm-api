@@ -56,4 +56,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    /**
+     * Cart relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function cart()
+    {
+        return $this->belongsToMany(ProductVariation::class, 'cart_user')
+            ->withPivot('quantity');
+    }
 }
