@@ -10,6 +10,13 @@ Route::prefix('/auth')->namespace('Auth')->group(function () {
 });
 
 /**
+ * Cart
+ */
+Route::namespace('Cart')->group(function () {
+    Route::apiResource('/cart', 'CartController');
+});
+
+/**
  * Categories
  */
 Route::namespace('Categories')->group(function () {
