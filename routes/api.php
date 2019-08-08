@@ -13,7 +13,11 @@ Route::prefix('/auth')->namespace('Auth')->group(function () {
  * Cart
  */
 Route::namespace('Cart')->group(function () {
-    Route::apiResource('/cart', 'CartController');
+    Route::apiResource('/cart', 'CartController', [
+        'parameters' => [
+            'cart' => 'productVariation'
+        ]
+    ]);
 });
 
 /**

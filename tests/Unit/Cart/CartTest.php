@@ -28,7 +28,7 @@ class CartTest extends TestCase
             ]
         ]);
 
-        $this->assertCount($quantity, $user->cart);
+        $this->assertCount($quantity, $user->fresh()->cart);
     }
 
     /** @test */
@@ -63,5 +63,25 @@ class CartTest extends TestCase
         $user = $user->fresh();
 
         $this->assertEquals(2, $user->cart->first()->pivot->quantity);
+    }
+
+    /** @test */
+    public function it_can_update_product_variation_quantities_in_the_cart()
+    {
+        $cart = new Cart(
+            $user = factory(User::class)->create()
+        );
+
+        $user->cart()->attach(
+            $variation = factory(ProductVariation::class)->create(), [
+                'quantity' => 1
+            ]
+        );
+
+        $this->assertEquals(1, $user->cart->first()->pivot->quantity);
+
+        $cart->update($variation->id, 2);
+
+        $this->assertEquals(2, $user->fresh()->cart->first()->pivot->quantity);
     }
 }

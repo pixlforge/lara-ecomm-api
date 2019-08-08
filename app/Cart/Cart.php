@@ -52,6 +52,20 @@ class Cart
     }
 
     /**
+     * Update a product variation's quantity in the cart.
+     *
+     * @param int $productId
+     * @param int $quantity
+     * @return void
+     */
+    public function update($productId, $quantity)
+    {
+        $this->user->cart()->updateExistingPivot($productId, [
+            'quantity' => $quantity
+        ]);
+    }
+
+    /**
      * Get the current quantity for a product variation
      *
      * @param int $productId
