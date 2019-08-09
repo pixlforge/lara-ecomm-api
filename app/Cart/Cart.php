@@ -77,6 +77,16 @@ class Cart
     }
 
     /**
+     * Empty the user's cart.
+     *
+     * @return void
+     */
+    public function empty()
+    {
+        $this->user->cart()->detach();
+    }
+
+    /**
      * Get the current quantity for a product variation
      *
      * @param int $productId
