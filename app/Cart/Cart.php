@@ -66,6 +66,17 @@ class Cart
     }
 
     /**
+     * Delete a product from the user's cart.
+     *
+     * @param int $productId
+     * @return void
+     */
+    public function delete($productId)
+    {
+        $this->user->cart()->detach($productId);
+    }
+
+    /**
      * Get the current quantity for a product variation
      *
      * @param int $productId

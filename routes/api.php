@@ -1,35 +1,36 @@
 <?php
 
+use App\Http\Controllers\Auth\MeController;
+use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Products\ProductController;
+use App\Http\Controllers\Categories\CategoryController;
+
 /**
  * Auth
  */
-Route::prefix('/auth')->namespace('Auth')->group(function () {
-    Route::post('/register', 'RegisterController')->name('auth.register');
-    Route::post('/login', 'LoginController')->name('auth.login');
-    Route::get('/me', 'MeController')->name('auth.me');
+Route::prefix('/auth')->group(function () {
+    Route::post('/register', RegisterController::class)->name('auth.register');
+    Route::post('/login', LoginController::class)->name('auth.login');
+    Route::get('/me', MeController::class)->name('auth.me');
 });
 
 /**
  * Cart
  */
-Route::namespace('Cart')->group(function () {
-    Route::apiResource('/cart', 'CartController', [
-        'parameters' => [
-            'cart' => 'productVariation'
-        ]
-    ]);
-});
+Route::apiResource('/cart', CartController::class, [
+    'parameters' => [
+        'cart' => 'productVariation'
+    ]
+]);
 
 /**
  * Categories
  */
-Route::namespace('Categories')->group(function () {
-    Route::apiResource('/categories', 'CategoryController');
-});
+Route::apiResource('/categories', CategoryController::class);
 
 /**
  * Products
  */
-Route::namespace('Products')->group(function () {
-    Route::apiResource('/products', 'ProductController');
-});
+Route::apiResource('/products', ProductController::class);
