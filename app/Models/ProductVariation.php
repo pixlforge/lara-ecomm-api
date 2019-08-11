@@ -36,11 +36,21 @@ class ProductVariation extends Model
         return $this->price->getAmount() !== $this->product->price->getAmount();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function inStock()
     {
         return $this->stockCount() > 0;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function stockCount()
     {
         return $this->stock->sum('pivot.stock');
