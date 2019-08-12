@@ -86,6 +86,11 @@ class Cart
         $this->user->cart()->detach();
     }
 
+    public function isEmpty()
+    {
+        return $this->user->cart->sum('pivot.quantity') === 0;
+    }
+
     /**
      * Get the current quantity for a product variation
      *

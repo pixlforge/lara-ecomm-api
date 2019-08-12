@@ -20,13 +20,22 @@ class CartController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index(Request $request)
+    /**
+     * Get the user's cart.
+     *
+     * @param Request $request
+     * @return CartResource
+     */
+    public function index(Request $request, Cart $cart)
     {
         $request->user()->load([
             'cart.product.variations.stock', 'cart.product.categories', 'cart.stock'
         ]);
 
-        return new CartResource($request->user());
+        return (new CartResource($request->user()))
+            ->additional([
+                'meta' => $this->meta($cart)
+            ]);
     }
     
     /**
@@ -62,5 +71,18 @@ class CartController extends Controller
     public function destroy(ProductVariation $productVariation, Cart $cart)
     {
         $cart->delete($productVariation);
+    }
+
+    /**
+     * Get the cart's additional information.
+     *
+     * @param Request $request
+     * @return array
+     */
+    protected function meta(Cart $cart)
+    {
+        return [
+            'is_empty' => $cart->isEmpty(),
+        ];
     }
 }
