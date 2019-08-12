@@ -82,7 +82,7 @@ class CartController extends Controller
     protected function meta(Cart $cart)
     {
         return [
-            'is_empty' => $cart->isEmpty(),
+            'isEmpty' => $cart->isEmpty(),
         ];
     }
 }
