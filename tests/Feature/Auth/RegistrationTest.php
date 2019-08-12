@@ -4,13 +4,9 @@ namespace Tests\Feature\Auth;
 
 use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 
 class RegistrationTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_requires_a_name()
     {

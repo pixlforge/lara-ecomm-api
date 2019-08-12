@@ -5,12 +5,9 @@ namespace Tests\Unit\Models\Categories;
 use Tests\TestCase;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CategoryTest extends TestCase
 {
-    use RefreshDatabase;
-    
     /** @test */
     public function it_has_many_children()
     {

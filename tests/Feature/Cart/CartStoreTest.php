@@ -4,13 +4,10 @@ namespace Tests\Feature\Cart;
 
 use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\ProductVariation;
 
 class CartStoreTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_fails_if_unauthenticated()
     {

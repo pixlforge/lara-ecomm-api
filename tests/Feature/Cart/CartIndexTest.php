@@ -3,14 +3,12 @@
 namespace Tests\Feature\Cart;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 use App\Models\ProductVariation;
+use App\Money\Money;
 
 class CartIndexTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_fails_if_unauthenticated()
     {
@@ -47,7 +45,34 @@ class CartIndexTest extends TestCase
         $response = $this->getJsonAs($user, route('cart.index'));
 
         $response->assertJsonFragment([
-            'is_empty' => true
+            'isEmpty' => true
+        ]);
+    }
+
+    /** @test */
+    public function it_shows_a_formatted_subtotal()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->getJsonAs($user, route('cart.index'));
+
+        $response->assertJsonFragment([
+            'formatted' => (new Money(0))->formatted()
+        ]);
+    }
+
+    /** @test */
+    public function it_shows_a_detailed_subtotal()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->getJsonAs($user, route('cart.index'));
+
+        $response->assertJsonFragment([
+            'detailed' => [
+                'amount' => '0.00',
+                'currency' => 'CHF'
+            ]
         ]);
     }
 }

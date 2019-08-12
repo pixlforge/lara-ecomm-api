@@ -3,13 +3,10 @@
 namespace Tests\Feature\Auth;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 
 class LoginTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_requires_an_email()
     {

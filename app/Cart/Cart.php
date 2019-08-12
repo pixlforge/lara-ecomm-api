@@ -3,6 +3,7 @@
 namespace App\Cart;
 
 use App\Models\User;
+use App\Money\Money;
 
 class Cart
 {
@@ -86,9 +87,38 @@ class Cart
         $this->user->cart()->detach();
     }
 
+    /**
+     * Checks whether the cart is empty in terms of quantity.
+     *
+     * @return boolean
+     */
     public function isEmpty()
     {
         return $this->user->cart->sum('pivot.quantity') === 0;
+    }
+
+    /**
+     * Get the user's cart subtotal.
+     *
+     * @return Money
+     */
+    public function subtotal()
+    {
+        $subtotal = $this->user->cart->sum(function ($product) {
+            return $product->price->getAmount() * $product->pivot->quantity;
+        });
+
+        return new Money($subtotal);
+    }
+
+    /**
+     * Get the user's cart total.
+     *
+     * @return Money
+     */
+    public function total()
+    {
+        return $this->subtotal();
     }
 
     /**

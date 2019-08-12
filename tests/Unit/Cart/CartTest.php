@@ -5,13 +5,11 @@ namespace Tests\Unit\Cart;
 use App\Cart\Cart;
 use Tests\TestCase;
 use App\Models\User;
+use App\Money\Money;
 use App\Models\ProductVariation;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CartTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_can_add_products_variations_to_the_cart()
     {
@@ -147,5 +145,43 @@ class CartTest extends TestCase
         );
 
         $this->assertTrue($cart->isEmpty());
+    }
+
+    /** @test */
+    public function it_returns_a_money_instance_for_the_subtotal()
+    {
+        $cart = new Cart(
+            factory(User::class)->create()
+        );
+
+        $this->assertInstanceOf(Money::class, $cart->subtotal());
+    }
+
+    /** @test */
+    public function it_returns_the_correct_amount_for_the_subtotal()
+    {
+        $cart = new Cart(
+            $user = factory(User::class)->create()
+        );
+
+        $user->cart()->save(
+            factory(ProductVariation::class)->create([
+                'price' => 1000
+            ]), [
+                'quantity' => 2
+            ]
+        );
+
+        $this->assertEquals(2000, $cart->subtotal()->getAmount());
+    }
+
+    /** @test */
+    public function it_returns_a_money_instance_for_the_total()
+    {
+        $cart = new Cart(
+            factory(User::class)->create()
+        );
+
+        $this->assertInstanceOf(Money::class, $cart->total());
     }
 }

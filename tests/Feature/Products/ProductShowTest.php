@@ -4,12 +4,9 @@ namespace Tests\Feature\Products;
 
 use Tests\TestCase;
 use App\Models\Product;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductShowTest extends TestCase
 {
-    use RefreshDatabase;
-    
     /** @test */
     public function it_fails_if_a_product_cannot_be_found()
     {

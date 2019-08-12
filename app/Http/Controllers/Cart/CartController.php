@@ -41,6 +41,8 @@ class CartController extends Controller
     /**
      * Add a product variation to the cart.
      *
+     * @param CartStoreRequest $request
+     * @param Cart $cart
      * @return void
      */
     public function store(CartStoreRequest $request, Cart $cart)
@@ -83,6 +85,14 @@ class CartController extends Controller
     {
         return [
             'isEmpty' => $cart->isEmpty(),
+            'subtotal' => [
+                'detailed' => $cart->subtotal()->detailed(),
+                'formatted' => $cart->subtotal()->formatted()
+            ],
+            'total' => [
+                'detailed' => $cart->total()->detailed(),
+                'formatted' => $cart->total()->formatted()
+            ]
         ];
     }
 }

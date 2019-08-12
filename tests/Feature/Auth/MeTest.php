@@ -3,13 +3,10 @@
 namespace Tests\Feature\Auth;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 
 class MeTest extends TestCase
 {
-    use RefreshDatabase;
-
     /** @test */
     public function it_fails_if_unauthenticated()
     {

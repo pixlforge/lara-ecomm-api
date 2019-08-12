@@ -8,12 +8,9 @@ use App\Models\Stock;
 use App\Models\Product;
 use App\Models\ProductVariation;
 use App\Models\ProductVariationType;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductVariationTest extends TestCase
 {
-    use RefreshDatabase;
-    
     /** @test */
     public function it_has_one_variation_type()
     {
