@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Money\Money;
 use App\Models\ProductVariation;
+use App\Models\Stock;
 
 class CartTest extends TestCase
 {
@@ -183,5 +184,71 @@ class CartTest extends TestCase
         );
 
         $this->assertInstanceOf(Money::class, $cart->total());
+    }
+
+    /** @test */
+    public function it_syncs_the_cart_to_update_quantities()
+    {
+        $cart = new Cart(
+            $user = factory(User::class)->create()
+        );
+
+        $user->cart()->attach(
+            factory(ProductVariation::class)->create(), [
+                'quantity' => 2
+            ]
+        );
+
+        $this->assertEquals(2, $user->cart->first()->pivot->quantity);
+
+        $cart->sync();
+
+        $this->assertEquals(0, $user->cart->first()->pivot->quantity);
+    }
+
+    /** @test */
+    public function it_can_check_if_the_cart_has_changed_after_syncing()
+    {
+        $cart = new Cart(
+            $user = factory(User::class)->create()
+        );
+
+        $user->cart()->attach(
+            factory(ProductVariation::class)->create(), [
+                'quantity' => 2
+            ]
+        );
+
+        $this->assertFalse($cart->hasChanged());
+
+        $cart->sync();
+
+        $this->assertTrue($cart->hasChanged());
+    }
+
+    /** @test */
+    public function it_can_check_that_the_cart_has_not_changed_after_syncing()
+    {
+        $cart = new Cart(
+            $user = factory(User::class)->create()
+        );
+
+        $product = factory(ProductVariation::class)->create();
+
+        $product->stocks()->save(
+            factory(Stock::class)->create([
+                'quantity' => 10
+            ])
+        );
+
+        $user->cart()->attach($product, [
+            'quantity' => 1
+        ]);
+
+        $this->assertFalse($cart->hasChanged());
+        
+        $cart->sync();
+        
+        $this->assertFalse($cart->hasChanged());
     }
 }

@@ -5,6 +5,7 @@ namespace Tests\Feature\Cart;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\ProductVariation;
+use App\Models\Stock;
 use App\Money\Money;
 
 class CartIndexTest extends TestCase
@@ -22,8 +23,15 @@ class CartIndexTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $user->cart()->attach(
-            $variation = factory(ProductVariation::class)->create(), [
+        $variation = factory(ProductVariation::class)->create();
+
+        $variation->stocks()->save(
+            factory(Stock::class)->create([
+                'quantity' => 10
+            ])
+        );
+
+        $user->cart()->attach($variation, [
                 'quantity' => $quantity = 4
             ]
         );
@@ -73,6 +81,54 @@ class CartIndexTest extends TestCase
                 'amount' => '0.00',
                 'currency' => 'CHF'
             ]
+        ]);
+    }
+
+    /** @test */
+    public function it_shows_if_the_cart_has_changed()
+    {
+        $user = factory(User::class)->create();
+
+        $variation = factory(ProductVariation::class)->create();
+
+        $variation->stocks()->save(
+            factory(Stock::class)->create([
+                'quantity' => 10
+            ])
+        );
+
+        $user->cart()->attach($variation, [
+            'quantity' => 15
+        ]);
+
+        $response = $this->getJsonAs($user, route('cart.index'));
+
+        $response->assertJsonFragment([
+            'hasChanged' => true
+        ]);
+    }
+
+    /** @test */
+    public function it_shows_if_the_cart_has_not_changed()
+    {
+        $user = factory(User::class)->create();
+
+        $variation = factory(ProductVariation::class)->create();
+
+        $variation->stocks()->save(
+            factory(Stock::class)->create([
+                'quantity' => 10
+            ])
+        );
+
+        $user->cart()->attach($variation, [
+            'quantity' => 10
+        ]);
+
+        $response = $this->getJsonAs($user, route('cart.index'));
+
+        $response->assertJsonFragment([
+            'hasChanged' => false
         ]);
     }
 }

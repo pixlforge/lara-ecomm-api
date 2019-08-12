@@ -57,6 +57,17 @@ class ProductVariation extends Model
     }
 
     /**
+     * Returns the minimal quantity between stock count and items in cart.
+     *
+     * @param int $quantity
+     * @return int
+     */
+    public function minStock($quantity)
+    {
+        return min($this->stockCount(), $quantity);
+    }
+
+    /**
      * Type relationship.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

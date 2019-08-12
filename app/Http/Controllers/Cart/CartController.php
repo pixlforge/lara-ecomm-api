@@ -28,6 +28,8 @@ class CartController extends Controller
      */
     public function index(Request $request, Cart $cart)
     {
+        $cart->sync();
+
         $request->user()->load([
             'cart.product.variations.stock', 'cart.product.categories', 'cart.stock'
         ]);
@@ -92,7 +94,8 @@ class CartController extends Controller
             'total' => [
                 'detailed' => $cart->total()->detailed(),
                 'formatted' => $cart->total()->formatted()
-            ]
+            ],
+            'hasChanged' => $cart->hasChanged()
         ];
     }
 }

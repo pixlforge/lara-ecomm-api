@@ -15,6 +15,14 @@ class Cart
     protected $user;
 
     /**
+     * Indicates that a product's quantity in the user's
+     * cart has been updated automatically.
+     *
+     * @var boolean
+     */
+    protected $changed = false;
+
+    /**
      * Cart constructor.
      *
      * @param User $user
@@ -119,6 +127,34 @@ class Cart
     public function total()
     {
         return $this->subtotal();
+    }
+
+    public function sync()
+    {
+        $this->user->cart->each(function ($product) {
+            $quantity = $product->minStock($product->pivot->quantity);
+
+            if ($quantity != $product->pivot->quantity) {
+                $this->changed = true;
+            }
+
+            if ($this->hasChanged()) {
+                $product->pivot->update([
+                    'quantity' => $quantity
+                ]);
+            }
+        });
+    }
+
+    /**
+     * Checks whether a product quantity in the
+     * user's cart has been updated or not.
+     *
+     * @return boolean
+     */
+    public function hasChanged()
+    {
+        return $this->changed;
     }
 
     /**
