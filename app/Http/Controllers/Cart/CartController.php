@@ -31,7 +31,7 @@ class CartController extends Controller
         $cart->sync();
 
         $request->user()->load([
-            'cart.product.variations.stock', 'cart.product.categories', 'cart.stock'
+            'cart.product.variations.stock', 'cart.product.categories', 'cart.stock', 'cart.type'
         ]);
 
         return (new CartResource($request->user()))
