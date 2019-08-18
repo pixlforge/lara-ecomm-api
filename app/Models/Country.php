@@ -21,4 +21,14 @@ class Country extends Model
     protected $fillable = [
         'code', 'name'
     ];
+
+    /**
+     * Addresses relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
 }
