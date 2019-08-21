@@ -4,6 +4,7 @@ namespace Tests\Feature\Addresses;
 
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Address;
 use App\Models\Country;
 use Illuminate\Foundation\Testing\WithFaker;
 
@@ -118,5 +119,35 @@ class AddressStoreTest extends TestCase
         $response->assertJsonFragment([
             'id' => $response->getData()->data->id
         ]);
+    }
+
+    /** @test */
+    public function it_sets_other_addresses_to_not_default_when_creating()
+    {
+        $user = factory(User::class)->create();
+
+        $user->addresses()->save(
+            factory(Address::class)->create([
+                'default' => true
+            ])
+        );
+
+        $this->assertTrue($user->addresses->first()->isDefault());
+
+        $response = $this->postJsonAs($user, route('addresses.store'), [
+            'user_id' => $user->id,
+            'country_id' => $user->addresses->first()->country_id,
+            'name' => $this->faker->sentence,
+            'address_1' => $this->faker->streetAddress,
+            'city' => $this->faker->city,
+            'postal_code' => $this->faker->postcode,
+            'default' => true
+        ]);
+
+        $response->assertSuccessful();
+
+        $this->assertFalse($user->addresses->first()->fresh()->isDefault());
+
+        $this->assertTrue($user->addresses->last()->isDefault());
     }
 }
