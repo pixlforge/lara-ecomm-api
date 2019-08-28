@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\Addresses\AddressController;
 use App\Http\Controllers\Categories\CategoryController;
+use App\Http\Controllers\Countries\CountryController;
 
 /**
  * Addresses
@@ -35,6 +36,11 @@ Route::apiResource('/cart', CartController::class, [
  * Categories
  */
 Route::apiResource('/categories', CategoryController::class);
+
+/**
+ * Countries
+ */
+Route::apiResource('/countries', CountryController::class);
 
 /**
  * Products
