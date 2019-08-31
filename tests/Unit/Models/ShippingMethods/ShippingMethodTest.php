@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models\ShippingMethods;
 
+use App\Models\Country;
 use Tests\TestCase;
 use App\Money\Money;
 use App\Models\ShippingMethod;
@@ -13,6 +14,16 @@ class ShippingMethodTest extends TestCase
         parent::setUp();
 
         $this->shippingMethod = factory(ShippingMethod::class)->create();
+    }
+
+    /** @test */
+    public function it_belongs_to_many_countries()
+    {
+        $this->shippingMethod->countries()->attach(
+            factory(Country::class)->create()
+        );
+        
+        $this->assertInstanceOf(Country::class, $this->shippingMethod->countries->first());
     }
     
     /** @test */

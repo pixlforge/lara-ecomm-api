@@ -31,4 +31,14 @@ class Country extends Model
     {
         return $this->hasMany(Address::class);
     }
+
+    /**
+     * Shippping methods relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function shippingMethods()
+    {
+        return $this->belongsToMany(ShippingMethod::class);
+    }
 }
