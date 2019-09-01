@@ -6,12 +6,14 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\Addresses\AddressController;
-use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Countries\CountryController;
+use App\Http\Controllers\Categories\CategoryController;
+use App\Http\Controllers\Addresses\AddressShippingController;
 
 /**
  * Addresses
  */
+Route::get('/addresses/{address}/shipping', AddressShippingController::class)->name('addresses.shipping');
 Route::apiResource('/addresses', AddressController::class);
 
 /**
