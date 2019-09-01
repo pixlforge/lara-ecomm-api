@@ -7,8 +7,6 @@ use NumberFormatter;
 use Money\Money as BaseMoney;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\IntlMoneyFormatter;
-use Money\Parser\DecimalMoneyParser;
-use Money\Number;
 use Money\Formatter\DecimalMoneyFormatter;
 
 class Money
@@ -68,5 +66,28 @@ class Money
             'amount' => $formatter->format($this->money),
             'currency' => $this->money->getCurrency()
         ];
+    }
+
+    /**
+     * Add two Money instances.
+     *
+     * @param Money $money
+     * @return void
+     */
+    public function add(Money $money)
+    {
+        $this->money = $this->money->add($money->instance());
+
+        return $this;
+    }
+
+    /**
+     * Get the underlying BaseMoney instance.
+     *
+     * @return BaseMoney
+     */
+    public function instance()
+    {
+        return $this->money;
     }
 }

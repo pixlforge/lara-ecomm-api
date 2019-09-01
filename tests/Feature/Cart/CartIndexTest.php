@@ -4,9 +4,10 @@ namespace Tests\Feature\Cart;
 
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\ProductVariation;
-use App\Models\Stock;
 use App\Money\Money;
+use App\Models\Stock;
+use App\Models\ProductVariation;
+use App\Models\ShippingMethod;
 
 class CartIndexTest extends TestCase
 {
@@ -58,28 +59,61 @@ class CartIndexTest extends TestCase
     }
 
     /** @test */
-    public function it_shows_a_formatted_subtotal()
+    public function it_shows_formatted_and_detailed_subtotal()
     {
         $user = factory(User::class)->create();
 
         $response = $this->getJsonAs($user, route('cart.index'));
 
         $response->assertJsonFragment([
-            'formatted' => (new Money(0))->formatted()
+            'subtotal' => [
+                'detailed' => [
+                    'amount' => '0.00',
+                    'currency' => 'CHF'
+                ],
+                'formatted' => (new Money(0))->formatted()
+            ]
         ]);
     }
 
     /** @test */
-    public function it_shows_a_detailed_subtotal()
+    public function it_shows_formatted_and_detailed_total()
     {
         $user = factory(User::class)->create();
 
         $response = $this->getJsonAs($user, route('cart.index'));
 
         $response->assertJsonFragment([
-            'detailed' => [
-                'amount' => '0.00',
-                'currency' => 'CHF'
+            'total' => [
+                'detailed' => [
+                    'amount' => '0.00',
+                    'currency' => 'CHF'
+                ],
+                'formatted' => (new Money(0))->formatted()
+            ]
+        ]);
+    }
+
+    /** @test */
+    public function it_shows_a_formatted_and_detailed_total_with_shipping()
+    {
+        $user = factory(User::class)->create();
+
+        $shippingMethod = factory(ShippingMethod::class)->create([
+            'price' => 1000
+        ]);
+
+        $response = $this->getJsonAs($user, route('cart.index', [
+            'shipping_method_id' => $shippingMethod->id
+        ]));
+
+        $response->assertJsonFragment([
+            'total' => [
+                'detailed' => [
+                    'amount' => '10.00',
+                    'currency' => 'CHF'
+                ],
+                'formatted' => (new Money(1000))->formatted()
             ]
         ]);
     }

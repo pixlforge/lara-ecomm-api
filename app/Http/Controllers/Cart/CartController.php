@@ -34,9 +34,9 @@ class CartController extends Controller
             'cart.product.variations.stock', 'cart.product.categories', 'cart.stock', 'cart.type'
         ]);
 
-        return (new CartResource($request->user()))
+        return (CartResource::make($request->user()))
             ->additional([
-                'meta' => $this->meta($cart)
+                'meta' => $this->meta($cart, $request)
             ]);
     }
     
@@ -80,10 +80,11 @@ class CartController extends Controller
     /**
      * Get the cart's additional information.
      *
+     * @param Cart $cart
      * @param Request $request
      * @return array
      */
-    protected function meta(Cart $cart)
+    protected function meta(Cart $cart, Request $request)
     {
         return [
             'isEmpty' => $cart->isEmpty(),
@@ -92,8 +93,8 @@ class CartController extends Controller
                 'formatted' => $cart->subtotal()->formatted()
             ],
             'total' => [
-                'detailed' => $cart->total()->detailed(),
-                'formatted' => $cart->total()->formatted()
+                'detailed' => $cart->withShipping($request->shipping_method_id)->total()->detailed(),
+                'formatted' => $cart->withShipping($request->shipping_method_id)->total()->formatted()
             ],
             'hasChanged' => $cart->hasChanged()
         ];

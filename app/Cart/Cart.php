@@ -2,6 +2,7 @@
 
 namespace App\Cart;
 
+use App\Models\ShippingMethod;
 use App\Models\User;
 use App\Money\Money;
 
@@ -21,6 +22,13 @@ class Cart
      * @var boolean
      */
     protected $changed = false;
+
+    /**
+     * The shipping method.
+     *
+     * @var string
+     */
+    protected $shippingMethod;
 
     /**
      * Cart constructor.
@@ -106,6 +114,19 @@ class Cart
     }
 
     /**
+     * Add a shipping method id to the cart.
+     *
+     * @param string $shippingMethodId
+     * @return $this
+     */
+    public function withShipping($shippingMethodId)
+    {
+        $this->shippingMethod = ShippingMethod::find($shippingMethodId);
+
+        return $this;
+    }
+
+    /**
      * Get the user's cart subtotal.
      *
      * @return Money
@@ -126,9 +147,18 @@ class Cart
      */
     public function total()
     {
+        if ($this->shippingMethod) {
+            return $this->subtotal()->add($this->shippingMethod->price);
+        }
+        
         return $this->subtotal();
     }
 
+    /**
+     * Sync the cart product variation quantities.
+     *
+     * @return void
+     */
     public function sync()
     {
         $this->user->cart->each(function ($product) {
