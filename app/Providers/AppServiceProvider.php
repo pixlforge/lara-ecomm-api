@@ -6,9 +6,11 @@ use App\Cart\Cart;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
 use App\Observers\UserObserver;
 use App\Observers\ProductObserver;
 use App\Observers\CategoryObserver;
+use App\Observers\OrderObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -47,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
     protected function registerObservers()
     {
         Category::observe(CategoryObserver::class);
+        Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
         User::observe(UserObserver::class);
     }
