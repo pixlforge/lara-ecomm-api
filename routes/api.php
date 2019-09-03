@@ -9,6 +9,7 @@ use App\Http\Controllers\Addresses\AddressController;
 use App\Http\Controllers\Countries\CountryController;
 use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Addresses\AddressShippingController;
+use App\Http\Controllers\Orders\OrderController;
 
 /**
  * Addresses
@@ -43,6 +44,11 @@ Route::apiResource('/categories', CategoryController::class);
  * Countries
  */
 Route::apiResource('/countries', CountryController::class);
+
+/**
+ * Orders
+ */
+Route::apiResource('/orders', OrderController::class);
 
 /**
  * Products
