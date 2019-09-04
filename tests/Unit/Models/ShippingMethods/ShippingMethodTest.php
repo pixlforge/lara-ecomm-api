@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Models\ShippingMethods;
 
-use App\Models\Country;
 use Tests\TestCase;
 use App\Money\Money;
+use App\Models\Country;
 use App\Models\ShippingMethod;
 
 class ShippingMethodTest extends TestCase

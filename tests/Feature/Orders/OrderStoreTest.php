@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Orders;
 
-use App\Models\Address;
-use App\Models\User;
 use Tests\TestCase;
+use App\Models\User;
+use App\Models\Address;
+use App\Models\Country;
+use App\Models\ShippingMethod;
 
 class OrderStoreTest extends TestCase
 {
@@ -14,8 +16,16 @@ class OrderStoreTest extends TestCase
 
         $this->user = factory(User::class)->create();
 
+        $this->country = factory(Country::class)->create();
+
+        $this->country->shippingMethods()->attach(
+            $this->shippingMethod = factory(ShippingMethod::class)->create()
+        );
+
         $this->user->addresses()->save(
-            $this->address = factory(Address::class)->make()
+            $this->address = factory(Address::class)->make([
+                'country_id' => $this->country->id
+            ])
         );
     }
     
@@ -70,6 +80,18 @@ class OrderStoreTest extends TestCase
     {
         $response = $this->postJsonAs($this->user, route('orders.store'), [
             'shipping_method_id' => 999
+        ]);
+
+        $response->assertJsonValidationErrors(['shipping_method_id']);
+    }
+
+    /** @test */
+    public function it_requires_a_shipping_method_that_is_valid_for_the_given_address()
+    {
+        $shippingMethod = factory(ShippingMethod::class)->create();
+
+        $response = $this->postJsonAs($this->user, route('orders.store'), [
+            'shipping_method_id' => $shippingMethod->id
         ]);
 
         $response->assertJsonValidationErrors(['shipping_method_id']);
