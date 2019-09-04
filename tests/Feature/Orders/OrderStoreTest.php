@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\Country;
+use App\Models\Order;
 use App\Models\ShippingMethod;
 
 class OrderStoreTest extends TestCase
@@ -95,5 +96,20 @@ class OrderStoreTest extends TestCase
         ]);
 
         $response->assertJsonValidationErrors(['shipping_method_id']);
+    }
+
+    /** @test */
+    public function it_can_create_an_order()
+    {
+        $response = $this->postJsonAs($this->user, route('orders.store'), $payload = [
+            'address_id' => $this->address->id,
+            'shipping_method_id' => $this->shippingMethod->id,
+        ]);
+
+        $response->assertOk();
+
+        $this->assertDatabaseHas('orders', array_merge($payload, [
+            'user_id' => $this->user->id
+        ]));
     }
 }
