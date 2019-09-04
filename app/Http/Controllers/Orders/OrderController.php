@@ -12,22 +12,11 @@ use App\Models\ProductVariation;
 class OrderController extends Controller
 {
     /**
-     * Cart property.
-     *
-     * @var Cart
-     */
-    protected $cart;
-    
-    /**
      * OrderController constructor.
-     * 
-     * @param Cart $cart 
      */
-    public function __construct(Cart $cart)
+    public function __construct()
     {
         $this->middleware(['auth:api']);
-
-        $this->cart = $cart;
     }
 
     /**
@@ -36,9 +25,9 @@ class OrderController extends Controller
      * @param OrderStoreRequest $request
      * @return void
      */
-    public function store(OrderStoreRequest $request)
+    public function store(OrderStoreRequest $request, Cart $cart)
     {
-        $order = $this->createOrder($request);
+        $order = $this->createOrder($request, $cart);
 
         //
     }
@@ -47,13 +36,14 @@ class OrderController extends Controller
      * Create an order skeleton.
      *
      * @param Request $request
+     * @param Cart $cart
      * @return Order
      */
-    protected function createOrder(Request $request)
+    protected function createOrder(Request $request, Cart $cart)
     {
         return $request->user()->orders()->create(
             array_merge($request->only(['address_id', 'shipping_method_id']), [
-                'subtotal' => $this->cart->subtotal()->getAmount()
+                'subtotal' => $cart->subtotal()->getAmount()
             ])
         );
     }
