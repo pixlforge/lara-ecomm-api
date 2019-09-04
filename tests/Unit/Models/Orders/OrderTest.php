@@ -6,6 +6,7 @@ use App\Models\Address;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ProductVariation;
 use App\Models\ShippingMethod;
 
 class OrderTest extends TestCase
@@ -39,5 +40,29 @@ class OrderTest extends TestCase
     public function it_has_a_default_status_of_pending()
     {
         $this->assertEquals(Order::PENDING, $this->order->status);
+    }
+
+    /** @test */
+    public function it_has_many_product_variations()
+    {
+        $this->order->products()->attach(
+            factory(ProductVariation::class)->create(), [
+                'quantity' => 1
+            ]
+        );
+        
+        $this->assertInstanceOf(ProductVariation::class, $this->order->products->first());
+    }
+
+    /** @test */
+    public function it_has_a_quantity_attached_to_the_product_variations()
+    {
+        $this->order->products()->attach(
+            factory(ProductVariation::class)->create(), [
+                'quantity' => $quantity = 2
+            ]
+        );
+
+        $this->assertEquals($quantity, $this->order->products->first()->pivot->quantity);
     }
 }

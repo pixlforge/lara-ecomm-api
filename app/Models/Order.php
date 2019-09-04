@@ -49,4 +49,16 @@ class Order extends Model
     {
         return $this->belongsTo(ShippingMethod::class);
     }
+
+    /**
+     * Products relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function products()
+    {
+        return $this->belongsToMany(ProductVariation::class, 'product_variation_order')
+            ->withPivot(['quantity'])
+            ->withTimestamps();
+    }
 }
