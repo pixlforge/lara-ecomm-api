@@ -29,7 +29,15 @@ class OrderController extends Controller
     {
         $order = $this->createOrder($request, $cart);
 
-        //
+        $products = $cart->products()->keyBy('id')->map(function ($product) {
+            return [
+                'quantity' => $product->pivot->quantity
+            ];
+        })->toArray();
+
+        $order->products()->sync($products);
+
+        // TODO: Return the order with a resource
     }
 
     /**

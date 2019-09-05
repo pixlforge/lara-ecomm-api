@@ -2,9 +2,9 @@
 
 namespace App\Cart;
 
-use App\Models\ShippingMethod;
 use App\Models\User;
 use App\Money\Money;
+use App\Models\ShippingMethod;
 
 class Cart
 {
@@ -38,6 +38,16 @@ class Cart
     public function __construct($user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * Get the product variations in the user's cart.
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function products()
+    {
+        return $this->user->cart;
     }
 
     /**

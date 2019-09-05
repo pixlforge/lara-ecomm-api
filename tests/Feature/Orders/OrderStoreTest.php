@@ -4,10 +4,11 @@ namespace Tests\Feature\Orders;
 
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Stock;
 use App\Models\Address;
 use App\Models\Country;
-use App\Models\Order;
 use App\Models\ShippingMethod;
+use App\Models\ProductVariation;
 
 class OrderStoreTest extends TestCase
 {
@@ -111,5 +112,38 @@ class OrderStoreTest extends TestCase
         $this->assertDatabaseHas('orders', array_merge($payload, [
             'user_id' => $this->user->id
         ]));
+    }
+
+    /** @test */
+    public function it_attaches_the_products_to_the_order()
+    {
+        $this->user->cart()->sync($variation = $this->productWithStock());
+
+        $response = $this->postJsonAs($this->user, route('orders.store'), [
+            'address_id' => $this->address->id,
+            'shipping_method_id' => $this->shippingMethod->id
+        ]);
+
+        $response->assertOk();
+
+        $this->assertDatabaseHas('product_variation_order', [
+            'product_variation_id' => $variation->id,
+        ]);
+    }
+
+    /**
+     * Create a product variation along with some stocks.
+     *
+     * @return ProductVariation
+     */
+    protected function productWithStock()
+    {
+        $variation = factory(ProductVariation::class)->create();
+
+        $variation->stocks()->save(
+            factory(Stock::class)->create()
+        );
+
+        return $variation;
     }
 }
