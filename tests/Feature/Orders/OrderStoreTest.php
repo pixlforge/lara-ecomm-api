@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Stock;
 use App\Models\Address;
 use App\Models\Country;
+use App\Models\Order;
 use App\Models\ShippingMethod;
 use App\Models\ProductVariation;
 
@@ -102,6 +103,8 @@ class OrderStoreTest extends TestCase
     /** @test */
     public function it_can_create_an_order()
     {
+        $this->user->cart()->sync($this->productWithStock());
+        
         $response = $this->postJsonAs($this->user, route('orders.store'), $payload = [
             'address_id' => $this->address->id,
             'shipping_method_id' => $this->shippingMethod->id,
@@ -129,6 +132,25 @@ class OrderStoreTest extends TestCase
         $this->assertDatabaseHas('product_variation_order', [
             'product_variation_id' => $variation->id,
         ]);
+    }
+
+    /** @test */
+    public function it_cannot_create_an_order_when_the_cart_is_empty()
+    {
+        $this->user->cart()->sync([
+            ($this->productWithStock())->id, [
+                'quantity' => 0
+            ]
+        ]);
+
+        $response = $this->postJsonAs($this->user, route('orders.store'), [
+            'address_id' => $this->address->id,
+            'shipping_method_id' => $this->shippingMethod->id
+        ]);
+
+        $response->assertStatus(400);
+
+        $this->assertCount(0, Order::get());
     }
 
     /**

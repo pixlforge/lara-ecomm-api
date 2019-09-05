@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Cart\Cart;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\OrderStoreRequest;
-use App\Models\Order;
-use App\Models\ProductVariation;
 
 class OrderController extends Controller
 {
@@ -27,6 +26,10 @@ class OrderController extends Controller
      */
     public function store(OrderStoreRequest $request, Cart $cart)
     {
+        if ($cart->isEmpty()) {
+            return response(null, 400);
+        }
+        
         $order = $this->createOrder($request, $cart);
 
         $order->products()->sync($cart->products()->forSyncing());
