@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Collections\ProductVariationCollection;
 use App\Money\Money;
 use App\Models\Traits\HasPrice;
 use Illuminate\Database\Eloquent\Model;
@@ -109,5 +110,16 @@ class ProductVariation extends Model
             ->withPivot([
                 'stock', 'in_stock'
             ]);
+    }
+
+    /**
+     * Return a custom collection.
+     *
+     * @param array $models
+     * @return ProductVariationCollection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new ProductVariationCollection($models);
     }
 }
