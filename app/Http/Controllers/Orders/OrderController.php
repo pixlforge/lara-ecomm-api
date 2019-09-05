@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Cart\Cart;
-use App\Events\Orders\OrderCreated;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Events\Orders\OrderCreated;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Orders\OrderResource;
 use App\Http\Requests\Orders\OrderStoreRequest;
 
 class OrderController extends Controller
@@ -37,7 +38,7 @@ class OrderController extends Controller
 
         OrderCreated::dispatch($order);
 
-        // TODO: Return the order with a resource
+        return OrderResource::make($order);
     }
 
     /**

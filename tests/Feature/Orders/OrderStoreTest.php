@@ -112,7 +112,7 @@ class OrderStoreTest extends TestCase
             'shipping_method_id' => $this->shippingMethod->id,
         ]);
 
-        $response->assertOk();
+        $response->assertSuccessful();
 
         $this->assertDatabaseHas('orders', array_merge($payload, [
             'user_id' => $this->user->id
@@ -129,9 +129,10 @@ class OrderStoreTest extends TestCase
             'shipping_method_id' => $this->shippingMethod->id
         ]);
 
-        $response->assertOk();
+        $response->assertSuccessful();
 
         $this->assertDatabaseHas('product_variation_order', [
+            'order_id' => $response->getData()->data->id,
             'product_variation_id' => $variation->id,
         ]);
     }
@@ -167,9 +168,11 @@ class OrderStoreTest extends TestCase
             'shipping_method_id' => $this->shippingMethod->id
         ]);
 
-        $response->assertOk();
+        $response->assertSuccessful();
 
-        Event::assertDispatched(OrderCreated::class);
+        Event::assertDispatched(OrderCreated::class, function ($event) use ($response) {
+            return $event->order->id === $response->getData()->data->id;
+        });
     }
 
     /** @test */
@@ -184,7 +187,7 @@ class OrderStoreTest extends TestCase
             'shipping_method_id' => $this->shippingMethod->id
         ]);
 
-        $response->assertOk();
+        $response->assertSuccessful();
 
         $this->assertEmpty($this->user->fresh()->cart);
     }
