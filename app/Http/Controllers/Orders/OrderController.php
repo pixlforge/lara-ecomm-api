@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Cart\Cart;
+use App\Events\Orders\OrderCreated;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -33,6 +34,8 @@ class OrderController extends Controller
         $order = $this->createOrder($request, $cart);
 
         $order->products()->sync($cart->products()->forSyncing());
+
+        OrderCreated::dispatch($order);
 
         // TODO: Return the order with a resource
     }

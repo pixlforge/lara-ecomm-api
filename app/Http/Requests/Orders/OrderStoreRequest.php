@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests\Orders;
 
-use App\Models\Address;
-use App\Rules\ValidShippingMethod;
 use Illuminate\Validation\Rule;
+use App\Rules\ValidShippingMethod;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrderStoreRequest extends FormRequest
