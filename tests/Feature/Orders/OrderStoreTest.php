@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Orders;
 
+use App\Cart\Cart;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Stock;
@@ -32,6 +33,8 @@ class OrderStoreTest extends TestCase
                 'country_id' => $this->country->id
             ])
         );
+
+        $this->user->cart()->sync($this->productWithStock());
     }
     
     /** @test */
@@ -140,10 +143,10 @@ class OrderStoreTest extends TestCase
     /** @test */
     public function it_cannot_create_an_order_when_the_cart_is_empty()
     {
-        $this->user->cart()->sync([
-            ($this->productWithStock())->id, [
+        $this->user->cart()->detach();
+
+        $this->user->cart()->attach(($this->productWithStock())->id, [
                 'quantity' => 0
-            ]
         ]);
 
         $response = $this->postJsonAs($this->user, route('orders.store'), [
