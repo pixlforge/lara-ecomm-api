@@ -34,7 +34,7 @@ class ResponseWhenEmpty
     public function handle($request, Closure $next)
     {
         if ($this->cart->isEmpty()) {
-            return response()->json([
+            return response([
                 'message' => 'Your cart is currently empty.'
             ], 400);
         }

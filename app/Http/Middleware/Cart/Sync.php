@@ -36,7 +36,7 @@ class Sync
         $this->cart->sync();
 
         if ($this->cart->hasChanged()) {
-            return response()->json([
+            return response([
                 'message' => 'Oh no! It looks like some items in your cart have changed. Please, review the contents of your cart before placing your order.'
             ], 409);
         }
