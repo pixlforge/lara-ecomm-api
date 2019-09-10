@@ -17,15 +17,31 @@ class OrderController extends Controller
      */
     public function __construct()
     {
-        $this->middleware([
-            'auth:api', 'cart.sync', 'cart.empty'
-        ]);
+        $this->middleware(['auth:api']);
+        $this->middleware(['cart.sync', 'cart.empty'])->only(['store']);
+    }
+
+    /**
+     * Get the user's orders.
+     *
+     * @param Request $request
+     * @return OrderResource
+     */
+    public function index(Request $request)
+    {
+        $orders = $request->user()->orders()
+            ->with(['products', 'address', 'shippingMethod'])
+            ->latest()
+            ->paginate(10);
+
+        return OrderResource::collection($orders);
     }
 
     /**
      * Store a new order.
      *
      * @param OrderStoreRequest $request
+     * @param Cart $cart
      * @return OrderResource
      */
     public function store(OrderStoreRequest $request, Cart $cart)
