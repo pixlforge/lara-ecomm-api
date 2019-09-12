@@ -21,7 +21,14 @@ class OrderResource extends JsonResource
             'id' => $this->id,
             'status' => $this->status,
             'created_at' => $this->created_at->toDateTimeString(),
-            'subtotal' => $this->subtotal,
+            'subtotal' => [
+                'detailed' => $this->subtotal->detailed(),
+                'formatted' => $this->subtotal->formatted()
+            ],
+            'total' => [
+                'detailed' => $this->total()->detailed(),
+                'formatted' => $this->total()->formatted()
+            ],
             'products' => ProductVariationResource::collection($this->whenLoaded('products')),
             'address' => AddressResource::make($this->whenLoaded('address')),
             'shippingMethod' => ShippingMethodResource::make($this->whenLoaded('shippingMethod'))

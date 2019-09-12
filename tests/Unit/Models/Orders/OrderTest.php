@@ -2,12 +2,13 @@
 
 namespace Tests\Unit\Models\Orders;
 
-use App\Models\Address;
 use Tests\TestCase;
 use App\Models\User;
+use App\Money\Money;
 use App\Models\Order;
-use App\Models\ProductVariation;
+use App\Models\Address;
 use App\Models\ShippingMethod;
+use App\Models\ProductVariation;
 
 class OrderTest extends TestCase
 {
@@ -15,7 +16,15 @@ class OrderTest extends TestCase
     {
         parent::setUp();
 
-        $this->order = factory(Order::class)->create();
+        $this->shippingMethod = factory(ShippingMethod::class)->create([
+            'price' => 1000
+        ]);
+
+        $this->shippingMethod->orders()->save(
+            $this->order = factory(Order::class)->make([
+                'subtotal' => 1000
+            ])
+        );
     }
 
     /** @test */
@@ -64,5 +73,23 @@ class OrderTest extends TestCase
         );
 
         $this->assertEquals($quantity, $this->order->products->first()->pivot->quantity);
+    }
+
+    /** @test */
+    public function it_returns_a_money_instance_for_the_subtotal()
+    {
+        $this->assertInstanceOf(Money::class, $this->order->subtotal);
+    }
+
+    /** @test */
+    public function it_returns_a_money_instance_for_the_total()
+    {
+        $this->assertInstanceOf(Money::class, $this->order->total());
+    }
+
+    /** @test */
+    public function it_adds_shipping_onto_the_total()
+    {
+        $this->assertEquals(2000, $this->order->total()->getAmount());
     }
 }

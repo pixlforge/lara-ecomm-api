@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Money\Money;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -19,6 +20,27 @@ class Order extends Model
     protected $fillable = [
         'status', 'address_id', 'shipping_method_id', 'subtotal'
     ];
+
+    /**
+     * Get the subtotal attribute.
+     *
+     * @param int $subtotal
+     * @return Money
+     */
+    public function getSubtotalAttribute($subtotal)
+    {
+        return new Money($subtotal);
+    }
+
+    /**
+     * Get the total adding the total and shipping method price.
+     *
+     * @return Money
+     */
+    public function total()
+    {
+        return $this->subtotal->add($this->shippingMethod->price);
+    }
     
     /**
      * User relationship.

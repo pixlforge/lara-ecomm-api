@@ -25,4 +25,14 @@ class ShippingMethod extends Model
     {
         return $this->belongsToMany(Country::class);
     }
+
+    /**
+     * Orders relationship.
+     *
+     * @return void
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
