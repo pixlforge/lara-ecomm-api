@@ -4,13 +4,13 @@ namespace App\Providers;
 
 use App\Cart\Cart;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Order;
 use App\Observers\UserObserver;
+use App\Observers\OrderObserver;
 use App\Observers\ProductObserver;
 use App\Observers\CategoryObserver;
-use App\Observers\OrderObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
