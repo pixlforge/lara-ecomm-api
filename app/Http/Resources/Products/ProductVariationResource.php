@@ -29,7 +29,8 @@ class ProductVariationResource extends JsonResource
             ],
             'price_varies' => $this->priceVaries(),
             'in_stock' => $this->inStock(),
-            'stock_count' => $this->stockCount()
+            'stock_count' => $this->stockCount(),
+            'base_product' => ProductIndexResource::make($this->product)
         ];
     }
 }
