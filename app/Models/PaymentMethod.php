@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Traits\CanBeDefault;
 use Illuminate\Database\Eloquent\Model;
 
 class PaymentMethod extends Model
 {
+    use CanBeDefault;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -24,24 +27,6 @@ class PaymentMethod extends Model
         'default' => 'boolean'
     ];
     
-    /**
-     * Boot model.
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($paymentMethod) {
-            if ($paymentMethod->default) {
-                $paymentMethod->user->paymentMethods()->update([
-                    'default' => false
-                ]);
-            }
-        });
-    }
-
     /**
      * User relationship.
      *
