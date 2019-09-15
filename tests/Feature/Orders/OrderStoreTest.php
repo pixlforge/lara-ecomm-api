@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Orders;
 
-use App\Cart\Cart;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Stock;
 use App\Models\Address;
 use App\Models\Country;
-use App\Models\Order;
+use App\Models\PaymentMethod;
 use App\Models\ShippingMethod;
 use App\Models\ProductVariation;
 use App\Events\Orders\OrderCreated;
@@ -32,6 +32,10 @@ class OrderStoreTest extends TestCase
             $this->address = factory(Address::class)->make([
                 'country_id' => $this->country->id
             ])
+        );
+
+        $this->user->paymentMethods()->save(
+            $this->paymentMethod = factory(PaymentMethod::class)->make()
         );
 
         $this->user->cart()->sync($this->productWithStock());
@@ -106,6 +110,18 @@ class OrderStoreTest extends TestCase
     }
 
     /** @test */
+    public function it_requires_a_payment_method_that_belongs_to_the_user()
+    {
+        $paymentMethod = factory(PaymentMethod::class)->create();
+
+        $response = $this->postJsonAs($this->user, route('orders.store'), [
+            'payment_method_id' => $paymentMethod->id
+        ]);
+
+        $response->assertJsonValidationErrors(['payment_method_id']);
+    }
+
+    /** @test */
     public function it_can_create_an_order()
     {
         $this->user->cart()->sync($this->productWithStock());
@@ -113,6 +129,7 @@ class OrderStoreTest extends TestCase
         $response = $this->postJsonAs($this->user, route('orders.store'), $payload = [
             'address_id' => $this->address->id,
             'shipping_method_id' => $this->shippingMethod->id,
+            'payment_method_id' => $this->paymentMethod->id
         ]);
 
         $response->assertSuccessful();
@@ -129,7 +146,8 @@ class OrderStoreTest extends TestCase
 
         $response = $this->postJsonAs($this->user, route('orders.store'), [
             'address_id' => $this->address->id,
-            'shipping_method_id' => $this->shippingMethod->id
+            'shipping_method_id' => $this->shippingMethod->id,
+            'payment_method_id' => $this->paymentMethod->id
         ]);
 
         $response->assertSuccessful();
@@ -151,7 +169,8 @@ class OrderStoreTest extends TestCase
 
         $response = $this->postJsonAs($this->user, route('orders.store'), [
             'address_id' => $this->address->id,
-            'shipping_method_id' => $this->shippingMethod->id
+            'shipping_method_id' => $this->shippingMethod->id,
+            'payment_method_id' => $this->paymentMethod->id
         ]);
 
         $response->assertStatus(400);
@@ -168,7 +187,8 @@ class OrderStoreTest extends TestCase
 
         $response = $this->postJsonAs($this->user, route('orders.store'), [
             'address_id' => $this->address->id,
-            'shipping_method_id' => $this->shippingMethod->id
+            'shipping_method_id' => $this->shippingMethod->id,
+            'payment_method_id' => $this->paymentMethod->id
         ]);
 
         $response->assertSuccessful();
@@ -187,7 +207,8 @@ class OrderStoreTest extends TestCase
 
         $response = $this->postJsonAs($this->user, route('orders.store'), [
             'address_id' => $this->address->id,
-            'shipping_method_id' => $this->shippingMethod->id
+            'shipping_method_id' => $this->shippingMethod->id,
+            'payment_method_id' => $this->paymentMethod->id
         ]);
 
         $response->assertSuccessful();

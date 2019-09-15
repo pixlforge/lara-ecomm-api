@@ -36,6 +36,13 @@ class OrderStoreRequest extends FormRequest
                 'required',
                 'exists:shipping_methods,id',
                 new ValidShippingMethod($this->address_id)
+            ],
+            'payment_method_id' => [
+                'required',
+                'exists:payment_methods,id',
+                Rule::exists('payment_methods', 'id')->where(function ($builder) {
+                    $builder->where('user_id', $this->user()->id);
+                })
             ]
         ];
     }

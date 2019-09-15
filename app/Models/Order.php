@@ -18,7 +18,7 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'status', 'address_id', 'shipping_method_id', 'subtotal'
+        'status', 'address_id', 'shipping_method_id', 'payment_method_id', 'subtotal'
     ];
 
     /**
