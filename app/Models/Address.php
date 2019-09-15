@@ -28,16 +28,6 @@ class Address extends Model
     ];
 
     /**
-     * Checks whether or not the address is set as default.
-     *
-     * @return boolean
-     */
-    public function isDefault()
-    {
-        return $this->default;
-    }
-
-    /**
      * Country relationship.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

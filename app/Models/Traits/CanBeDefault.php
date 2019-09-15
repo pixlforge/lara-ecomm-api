@@ -32,4 +32,14 @@ trait CanBeDefault
     {
         $this->attributes['default'] = $value === 'true' || $value === true || $value == 1 ? true : false;
     }
+
+    /**
+     * Checks whether or not the model is set as default.
+     *
+     * @return boolean
+     */
+    public function isDefault()
+    {
+        return $this->default;
+    }
 }

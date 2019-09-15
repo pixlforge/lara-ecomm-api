@@ -10,6 +10,7 @@ use App\Http\Controllers\Countries\CountryController;
 use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Addresses\AddressShippingController;
 use App\Http\Controllers\Orders\OrderController;
+use App\Http\Controllers\PaymentMethods\PaymentMethodController;
 
 /**
  * Addresses
@@ -49,6 +50,11 @@ Route::apiResource('/countries', CountryController::class);
  * Orders
  */
 Route::apiResource('/orders', OrderController::class);
+
+/**
+ * Payment methods
+ */
+Route::apiResource('/payment-methods', PaymentMethodController::class);
 
 /**
  * Products
