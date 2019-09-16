@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Cart\Cart;
-use Stripe\Stripe;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
@@ -39,8 +38,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
-        
         $this->registerObservers();
     }
 
