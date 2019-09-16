@@ -22,4 +22,11 @@ interface CustomerContract
      * @return void
      */
     public function addCard($token);
+
+    /**
+     * Get the Stripe Customer id.
+     *
+     * @return string
+     */
+    public function id();
 }

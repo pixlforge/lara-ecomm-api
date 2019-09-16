@@ -3,6 +3,7 @@
 namespace App\Payments\Stripe;
 
 use App\Models\User;
+use Stripe\Customer as BaseCustomer;
 use App\Payments\Contracts\PaymentGatewayContract;
 
 class StripePaymentGateway implements PaymentGatewayContract
@@ -28,12 +29,54 @@ class StripePaymentGateway implements PaymentGatewayContract
     }
 
     /**
+     * Get the the user property.
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Get or create a new Customer resource.
+     *
+     * @return StripeCustomer
+     */
+    public function getOrCreateCustomer()
+    {
+        if ($this->user->gateway_customer_id) {
+            return $this->getStripeCustomer();
+        }
+
+        $customer = new StripeCustomer($this, $this->createStripeCustomer());
+
+        $this->user->update([
+            'gateway_customer_id' => $customer->id()
+        ]);
+
+        return $customer;
+    }
+
+    /**
+     * Get an existing Customer from Stripe.
+     *
+     * @return StripeCustomer
+     */
+    protected function getStripeCustomer()
+    {
+        return new StripeCustomer($this, BaseCustomer::retrieve($this->user->gateway_customer_id));
+    }
+
+    /**
      * Create a new Customer resource over on Stripe.
      *
-     * @return void
+     * @return BaseCustomer
      */
-    public function createCustomer()
+    protected function createStripeCustomer()
     {
-        return new StripeCustomer();
+        return BaseCustomer::create([
+            'email' => $this->user->email
+        ]);
     }
 }

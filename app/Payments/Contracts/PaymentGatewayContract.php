@@ -3,6 +3,7 @@
 namespace App\Payments\Contracts;
 
 use App\Models\User;
+use App\Payments\Stripe\StripeCustomer;
 
 interface PaymentGatewayContract
 {
@@ -15,9 +16,16 @@ interface PaymentGatewayContract
     public function withUser(User $user);
 
     /**
-     * Create a new Customer resource over on Stripe.
+     * Get the the user property.
      *
-     * @return void
+     * @return User
      */
-    public function createCustomer();
+    public function getUser();
+
+    /**
+     * Get or create a Customer resource over on Stripe.
+     *
+     * @return StripeCustomer
+     */
+    public function getOrCreateCustomer();
 }
