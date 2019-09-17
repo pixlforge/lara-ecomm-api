@@ -3,6 +3,7 @@
 namespace App\Payments\Stripe;
 
 use App\Models\PaymentMethod;
+use Stripe\Charge as BaseCharge;
 use Stripe\Customer as BaseCustomer;
 use App\Payments\Contracts\CustomerContract;
 use App\Payments\Contracts\PaymentGatewayContract;
@@ -43,7 +44,12 @@ class StripeCustomer implements CustomerContract
      */
     public function charge(PaymentMethod $paymentMethod, $amount)
     {
-        //
+        BaseCharge::create([
+            'currency' => 'chf',
+            'amount' => $amount,
+            'customer' => $this->customer->id,
+            'source' => $paymentMethod->provider_id
+        ]);
     }
 
     /**

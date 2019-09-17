@@ -63,7 +63,7 @@ class StripePaymentGateway implements PaymentGatewayContract
      *
      * @return StripeCustomer
      */
-    protected function getStripeCustomer()
+    public function getStripeCustomer()
     {
         return new StripeCustomer($this, BaseCustomer::retrieve($this->user->gateway_customer_id));
     }
