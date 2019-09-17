@@ -47,8 +47,6 @@ class StripeCustomer implements CustomerContract
     public function charge(PaymentMethod $paymentMethod, $amount)
     {
         try {
-            throw new PaymentFailedException(Exception);
-
             BaseCharge::create([
                 'currency' => 'chf',
                 'amount' => $amount,

@@ -11,7 +11,7 @@ class MarkOrderPaymentFailed implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param OrderPaymentFailed $event
      * @return void
      */
     public function handle(OrderPaymentFailed $event)
