@@ -61,14 +61,12 @@ class StripeCustomer implements CustomerContract
         $this->customer->default_source = $card->id;
         $this->customer->save();
 
-        $this->paymentGateway->getUser()->paymentMethods()->create([
+        return $this->paymentGateway->getUser()->paymentMethods()->create([
             'card_type' => $card->brand,
             'last_four' => $card->last4,
             'provider_id' => $card->id,
             'default' => true
         ]);
-
-        return $this;
     }
 
     /**

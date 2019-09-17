@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Payments\Contracts\PaymentGatewayContract;
 use App\Http\Resources\PaymentMethods\PaymentMethodResource;
+use App\Http\Requests\PaymentMethods\PaymentMethodStoreRequest;
 
 class PaymentMethodController extends Controller
 {
@@ -40,12 +41,15 @@ class PaymentMethodController extends Controller
     /**
      * Store a new payment method.
      *
-     * @return void
+     * @param PaymentMethodStoreRequest $request
+     * @return PaymentMethodResource
      */
-    public function store(Request $request)
+    public function store(PaymentMethodStoreRequest $request)
     {
         $card = $this->paymentGateway->withUser($request->user())
             ->getOrCreateCustomer()
             ->addCard($request->token);
+
+        return PaymentMethodResource::make($card);
     }
 }
