@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Money\Money;
 use App\Models\Order;
 use App\Models\Address;
+use App\Models\PaymentMethod;
 use App\Models\ShippingMethod;
 use App\Models\ProductVariation;
 
@@ -43,6 +44,12 @@ class OrderTest extends TestCase
     public function it_belongs_to_a_shipping_method()
     {
         $this->assertInstanceOf(ShippingMethod::class, $this->order->shippingMethod);
+    }
+
+    /** @test */
+    public function it_belongs_to_a_payment_method()
+    {
+        $this->assertInstanceOf(PaymentMethod::class, $this->order->paymentMethod);
     }
 
     /** @test */

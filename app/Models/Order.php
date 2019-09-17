@@ -73,6 +73,16 @@ class Order extends Model
     }
 
     /**
+     * Payment method relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
+    /**
      * Products relationship.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
