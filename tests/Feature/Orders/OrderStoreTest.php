@@ -13,6 +13,7 @@ use App\Models\ShippingMethod;
 use App\Models\ProductVariation;
 use App\Events\Orders\OrderCreated;
 use Illuminate\Support\Facades\Event;
+use Stripe\Customer;
 
 class OrderStoreTest extends TestCase
 {
@@ -21,6 +22,14 @@ class OrderStoreTest extends TestCase
         parent::setUp();
 
         $this->user = factory(User::class)->create();
+
+        $stripeCustomer = Customer::create([
+            'email' => $this->user->email
+        ]);
+
+        $this->user->update([
+            'gateway_customer_id' => $stripeCustomer->id
+        ]);
 
         $this->country = factory(Country::class)->create();
 
