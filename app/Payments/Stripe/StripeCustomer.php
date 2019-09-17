@@ -2,9 +2,11 @@
 
 namespace App\Payments\Stripe;
 
+use Exception;
 use App\Models\PaymentMethod;
 use Stripe\Charge as BaseCharge;
 use Stripe\Customer as BaseCustomer;
+use App\Exceptions\PaymentFailedException;
 use App\Payments\Contracts\CustomerContract;
 use App\Payments\Contracts\PaymentGatewayContract;
 
@@ -44,12 +46,18 @@ class StripeCustomer implements CustomerContract
      */
     public function charge(PaymentMethod $paymentMethod, $amount)
     {
-        BaseCharge::create([
-            'currency' => 'chf',
-            'amount' => $amount,
-            'customer' => $this->customer->id,
-            'source' => $paymentMethod->provider_id
-        ]);
+        try {
+            throw new PaymentFailedException(Exception);
+
+            BaseCharge::create([
+                'currency' => 'chf',
+                'amount' => $amount,
+                'customer' => $this->customer->id,
+                'source' => $paymentMethod->provider_id
+            ]);
+        } catch (Exception $e) {
+            throw new PaymentFailedException($e);
+        }
     }
 
     /**

@@ -3,7 +3,10 @@
 namespace App\Listeners\Orders;
 
 use App\Events\Orders\OrderCreated;
+use App\Events\Orders\OrderPaymentFailed;
+use App\Exceptions\PaymentFailedException;
 use App\Payments\Contracts\PaymentGatewayContract;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ProcessPayment implements ShouldQueue
@@ -35,8 +38,14 @@ class ProcessPayment implements ShouldQueue
     {
         $order = $event->order;
 
-        $this->paymentGateway->withUser($order->user)
-            ->getStripeCustomer()
-            ->charge($order->paymentMethod, $order->total()->getAmount());
+        try {
+            $this->paymentGateway->withUser($order->user)
+                ->getStripeCustomer()
+                ->charge($order->paymentMethod, $order->total()->getAmount());
+            
+            // Fire a successful event
+        } catch (PaymentFailedException $e) {
+            OrderPaymentFailed::dispatch($order);
+        }
     }
 }
