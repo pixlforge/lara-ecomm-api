@@ -93,4 +93,14 @@ class Order extends Model
             ->withPivot(['quantity'])
             ->withTimestamps();
     }
+
+    /**
+     * Transactions relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

@@ -10,6 +10,7 @@ use App\Models\Address;
 use App\Models\PaymentMethod;
 use App\Models\ShippingMethod;
 use App\Models\ProductVariation;
+use App\Models\Transaction;
 
 class OrderTest extends TestCase
 {
@@ -50,6 +51,16 @@ class OrderTest extends TestCase
     public function it_belongs_to_a_payment_method()
     {
         $this->assertInstanceOf(PaymentMethod::class, $this->order->paymentMethod);
+    }
+
+    /** @test */
+    public function it_has_many_transactions()
+    {
+        $this->order->transactions()->save(
+            factory(Transaction::class)->make()
+        );
+
+        $this->assertInstanceOf(Transaction::class, $this->order->transactions->first());
     }
 
     /** @test */
